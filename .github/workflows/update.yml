@@ -1,0 +1,38 @@
+name: 每週自動更新藝文活動
+
+on:
+  schedule:
+    - cron: '0 13 * * 0'   # 每週日 UTC 13:00 = 台灣時間週日晚上 21:00
+  workflow_dispatch:         # 也可以手動觸發
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write        # 允許推送 index.html 回 repo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Run collector
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python collector.py
+
+      - name: Commit & push index.html
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "auto: 更新藝文活動 $(date +'%Y/%m/%d')"
+          git push
