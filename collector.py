@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 """
-台北・新北 藝文活動自動收集器
+台北・新北 藝文活動自動收集器（Gemini 版，免費）
 每週日晚上執行，收集未來兩週活動，產出 index.html
 """
 
-import anthropic
 import json
 import os
-import sys
+import urllib.request
+import urllib.parse
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 # ── 設定 ──────────────────────────────────────────
-CITY_FILTER   = "台北市、新北市"
-MAX_PRICE     = 1000        # 超過此金額的活動不列入
-PRICE_NOTE    = f"費用超過 NT${MAX_PRICE} 不列入"
-TZ            = ZoneInfo("Asia/Taipei")
+CITY_FILTER = "台北市、新北市"
+MAX_PRICE   = 1000
+PRICE_NOTE  = f"費用超過 NT${MAX_PRICE} 不列入"
+TZ          = ZoneInfo("Asia/Taipei")
+GEMINI_MODEL = "gemini-2.0-flash"   # 免費額度最高的模型
 
 CATEGORIES = [
-    {"key": "flower",      "label": "🌸 賞花",    "color": "#e91e8c"},
-    {"key": "exhibition",  "label": "🖼️ 展覽",   "color": "#7c3aed"},
-    {"key": "workshop",    "label": "🎨 工作坊",  "color": "#0891b2"},
-    {"key": "performance", "label": "🎭 表演",    "color": "#d97706"},
-    {"key": "market",      "label": "🛍️ 市集",   "color": "#059669"},
-    {"key": "music",       "label": "🎵 音樂演出","color": "#dc2626"},
+    {"key": "flower",      "label": "🌸 賞花"},
+    {"key": "exhibition",  "label": "🖼️ 展覽"},
+    {"key": "workshop",    "label": "🎨 工作坊"},
+    {"key": "performance", "label": "🎭 表演"},
+    {"key": "market",      "label": "🛍️ 市集"},
+    {"key": "music",       "label": "🎵 音樂演出"},
 ]
 
 CATEGORY_KEYWORDS = {
@@ -88,7 +89,7 @@ HTML = """<!DOCTYPE html>
 <nav class="nav" id="nav"></nav>
 <div class="wrap" id="wrap"></div>
 <div class="footer">
-  <p>資料由 Claude AI 搜尋整理 · 活動資訊僅供參考，請以主辦單位公告為準</p>
+  <p>資料由 Gemini AI 搜尋整理 · 活動資訊僅供參考，請以主辦單位公告為準</p>
 </div>
 <script>
 const DATA = {data_json};
@@ -100,61 +101,33 @@ const TAGS = {{
   market:     {{label:'🛍️ 市集',  style:'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a760'}},
   music:      {{label:'🎵 音樂',   style:'background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a60'}},
 }};
-
 function row(cat, e, showTag) {{
   const tag = showTag ? `<td><span class="tag" style="${{TAGS[cat].style}}">${{TAGS[cat].label}}</span></td>` : '';
   const fc = e.price && (e.price.includes('免費') || e.price === '0') ? 'free' : '';
-  return `<tr>
-    ${{tag}}
-    <td class="name">${{e.name}}</td>
-    <td class="date-cell">${{e.date}}</td>
-    <td class="loc">${{e.location}}</td>
-    <td class="price ${{fc}}">${{e.price}}</td>
-  </tr>`;
+  return `<tr>${{tag}}<td class="name">${{e.name}}</td><td class="date-cell">${{e.date}}</td><td class="loc">${{e.location}}</td><td class="price ${{fc}}">${{e.price}}</td></tr>`;
 }}
-
 function buildSection(id, title, cat, events, showTag) {{
   const rows = events.map(e => row(cat, e, showTag)).join('');
-  return `<div class="sec" id="s-${{id}}">
-    <div class="sec-head">
-      <h2 class="sec-title">${{title}}</h2>
-      <span class="cnt">${{events.length}} 項</span>
-    </div>
-    <table>
-      <thead><tr>${{showTag?'<th>類別</th>':''}}<th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead>
-      <tbody>${{rows}}</tbody>
-    </table>
-  </div>`;
+  return `<div class="sec" id="s-${{id}}"><div class="sec-head"><h2 class="sec-title">${{title}}</h2><span class="cnt">${{events.length}} 項</span></div><table><thead><tr>${{showTag?'<th>類別</th>':''}}<th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>${{rows}}</tbody></table></div>`;
 }}
-
 const nav = document.getElementById('nav');
 const wrap = document.getElementById('wrap');
 const allEvents = [];
-
-DATA.categories.forEach(cat => {{
-  allEvents.push(...cat.events.map(e => ({{...e, _cat: cat.key}})));
-}});
-
-// 全部分頁
+DATA.categories.forEach(cat => {{ allEvents.push(...cat.events.map(e => ({{...e, _cat: cat.key}}))); }});
 nav.innerHTML = `<button class="tab on" onclick="show('all',this)">全部 (${{allEvents.length}})</button>`;
-wrap.innerHTML = buildSection('all', '✨ 全部活動', null, allEvents.map(e => e), true);
-document.querySelector('#s-all table thead tr').innerHTML =
-  '<th>類別</th><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th>';
+wrap.innerHTML = buildSection('all', '✨ 全部活動', null, allEvents, true);
+document.querySelector('#s-all table thead tr').innerHTML = '<th>類別</th><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th>';
 document.querySelectorAll('#s-all tbody tr').forEach((tr, i) => {{
   const cat = allEvents[i]._cat;
   tr.querySelector('td').innerHTML = `<span class="tag" style="${{TAGS[cat].style}}">${{TAGS[cat].label}}</span>`;
 }});
-
-// 各類別分頁
 DATA.categories.forEach(cat => {{
   if (!cat.events.length) return;
   const label = TAGS[cat.key].label;
   nav.innerHTML += `<button class="tab" onclick="show('${{cat.key}}',this)">${{label}} (${{cat.events.length}})</button>`;
   wrap.innerHTML += buildSection(cat.key, label, cat.key, cat.events, false);
 }});
-
 document.querySelector('#s-all').classList.add('on');
-
 function show(key, btn) {{
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
@@ -166,20 +139,39 @@ function show(key, btn) {{
 </html>"""
 
 
-# ── 主邏輯 ──────────────────────────────────────────
+# ── Gemini API ─────────────────────────────────────
+def gemini_search(api_key: str, prompt: str) -> str:
+    """呼叫 Gemini API（含 Google Search grounding，讓結果更準確）"""
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={api_key}"
+    body = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "tools": [{"google_search": {}}],   # 開啟 Google Search，確保資料是最新的
+        "generationConfig": {"temperature": 0.2}
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(body).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST"
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = json.loads(resp.read())
+    return data["candidates"][0]["content"]["parts"][0]["text"]
+
+
+# ── 主邏輯 ─────────────────────────────────────────
 def get_dates():
     now = datetime.now(TZ)
-    start = now
     end = now + timedelta(days=14)
     return (
-        f"{start.strftime('%Y/%m/%d')} – {end.strftime('%Y/%m/%d')}",
-        start.strftime('%Y-%m-%d'),
+        f"{now.strftime('%Y/%m/%d')} – {end.strftime('%Y/%m/%d')}",
+        now.strftime('%Y-%m-%d'),
         end.strftime('%Y-%m-%d'),
         now.strftime('%Y/%m/%d %H:%M'),
     )
 
 
-def fetch_events(client, cat: dict, start: str, end: str) -> list:
+def fetch_events(api_key: str, cat: dict, start: str, end: str) -> list:
     keywords = CATEGORY_KEYWORDS.get(cat["key"], cat["label"])
     prompt = f"""請搜尋 {start} 到 {end} 這段期間，{CITY_FILTER} 舉辦的「{keywords}」相關活動。
 
@@ -188,7 +180,7 @@ def fetch_events(client, cat: dict, start: str, end: str) -> list:
 - 費用超過 NT${MAX_PRICE} 的活動請排除
 - 找 5–8 個真實活動
 
-請只回傳 JSON，格式：
+請只回傳 JSON，不要任何說明文字或 markdown，格式：
 {{
   "events": [
     {{
@@ -201,13 +193,9 @@ def fetch_events(client, cat: dict, start: str, end: str) -> list:
 }}"""
 
     try:
-        response = client.messages.create(
-            model="claude-opus-4-5",
-            max_tokens=2000,
-            tools=[{"type": "web_search_20250305", "name": "web_search"}],
-            messages=[{"role": "user", "content": prompt}]
-        )
-        text = "".join(b.text for b in response.content if b.type == "text")
+        text = gemini_search(api_key, prompt)
+        # 移除 markdown code block（如果有的話）
+        text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         start_i = text.find("{")
         end_i = text.rfind("}") + 1
         if start_i >= 0:
@@ -217,41 +205,36 @@ def fetch_events(client, cat: dict, start: str, end: str) -> list:
     return []
 
 
-def build_html(all_data: list, date_range: str, generated_at: str) -> str:
-    payload = {"categories": [
-        {"key": c["key"], "events": events}
-        for c, events in all_data
-    ]}
-    total = sum(len(e) for _, e in all_data)
-    return HTML.format(
-        date_range=date_range,
-        generated_at=generated_at,
-        price_note=PRICE_NOTE,
-        data_json=json.dumps(payload, ensure_ascii=False),
-    )
-
-
 def main():
-    print("🎨 台北・新北 藝文活動收集器")
-    client = anthropic.Anthropic()
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("❌ 請設定環境變數 GEMINI_API_KEY")
+        raise SystemExit(1)
+
+    print("🎨 台北・新北 藝文活動收集器（Gemini 版）")
     date_range, start, end, generated_at = get_dates()
     print(f"📅 {date_range}\n")
 
     all_data = []
     for cat in CATEGORIES:
         print(f"搜尋 {cat['label']} ...", end=" ", flush=True)
-        events = fetch_events(client, cat, start, end)
+        events = fetch_events(api_key, cat, start, end)
         all_data.append((cat, events))
         print(f"找到 {len(events)} 項")
 
     total = sum(len(e) for _, e in all_data)
     print(f"\n✅ 共 {total} 項活動")
 
-    html = build_html(all_data, date_range, generated_at)
-    out = "index.html"
-    with open(out, "w", encoding="utf-8") as f:
+    payload = {"categories": [{"key": c["key"], "events": ev} for c, ev in all_data]}
+    html = HTML.format(
+        date_range=date_range,
+        generated_at=generated_at,
+        price_note=PRICE_NOTE,
+        data_json=json.dumps(payload, ensure_ascii=False),
+    )
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"📄 已產出 {out}")
+    print("📄 已產出 index.html")
 
 
 if __name__ == "__main__":
