@@ -30,7 +30,19 @@ jobs:
       - name: Run collector
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python collector.py
+        run: |
+          # 備份現有的 index.html
+          cp index.html index.html.bak 2>/dev/null || true
+          # 執行收集器
+          python collector.py
+          # 如果產出的 index.html 太小（小於 5KB），代表內容是空的，還原備份
+          SIZE=$(wc -c < index.html)
+          if [ "$SIZE" -lt 5000 ]; then
+            echo "⚠️  產出內容太小（${SIZE} bytes），還原備份"
+            cp index.html.bak index.html
+          else
+            echo "✅ 產出正常（${SIZE} bytes）"
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
