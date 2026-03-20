@@ -37,7 +37,7 @@ jobs:
           python collector.py
           # 如果產出的 index.html 太小（小於 5KB），代表內容是空的，還原備份
           SIZE=$(wc -c < index.html)
-          if [ "$SIZE" -lt 5000 ]; then
+          if [ "$SIZE" -lt 10000 ]; then
             echo "⚠️  產出內容太小（${SIZE} bytes），還原備份"
             cp index.html.bak index.html
           else
