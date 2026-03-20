@@ -6,6 +6,7 @@
 
 import json
 import os
+import time
 import urllib.request
 import urllib.parse
 from datetime import datetime, timedelta
@@ -216,7 +217,10 @@ def main():
     print(f"📅 {date_range}\n")
 
     all_data = []
-    for cat in CATEGORIES:
+    for i, cat in enumerate(CATEGORIES):
+        if i > 0:
+            print("  ⏳ 等待 15 秒避免超過 API 限制...")
+            time.sleep(15)
         print(f"搜尋 {cat['label']} ...", end=" ", flush=True)
         events = fetch_events(api_key, cat, start, end)
         all_data.append((cat, events))
