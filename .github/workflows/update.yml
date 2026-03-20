@@ -3,7 +3,7 @@ name: 每週自動更新藝文活動
 on:
   schedule:
     - cron: '0 13 * * 0'   # 每週日 UTC 13:00 = 台灣時間週日晚上 21:00
-  workflow_dispatch:         # 也可以手動觸發
+  workflow_dispatch:         # 手動觸發
 
 jobs:
   update:
@@ -11,6 +11,12 @@ jobs:
 
     permissions:
       contents: write
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -26,10 +32,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python collector.py
 
-      - name: Commit & push index.html
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git diff --staged --quiet || git commit -m "auto: 更新藝文活動 $(date +'%Y/%m/%d')"
-          git push
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
