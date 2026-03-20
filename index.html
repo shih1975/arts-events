@@ -6,89 +6,155 @@
 <title>台北・新北 藝文活動 2026/03/20 – 2026/04/03</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
-  :root{--bg:#faf8f5;--card:#fff;--text:#1a1410;--muted:#6b5c4e;--border:#e8e0d5;--accent:#c0392b}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text)}
-  .hero{background:linear-gradient(135deg,#1a0a05,#3d1f0f,#1a0a05);color:#fff;padding:48px 24px 36px;text-align:center}
-  .hero::before{content:'✦  ✦  ✦';display:block;font-size:10px;letter-spacing:12px;color:rgba(255,255,255,.3);margin-bottom:16px}
-  .hero h1{font-family:'Noto Serif TC',serif;font-size:clamp(24px,4vw,42px);font-weight:700;letter-spacing:.06em;margin-bottom:8px}
-  .hero .sub{font-size:13px;color:rgba(255,255,255,.55);letter-spacing:.18em}
-  .hero .badge{display:inline-block;margin-top:16px;padding:5px 18px;border:1px solid rgba(255,255,255,.22);border-radius:20px;font-size:12px;color:rgba(255,255,255,.75)}
-  .hero .updated{display:block;margin-top:10px;font-size:11px;color:rgba(255,255,255,.4)}
-  .nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.05)}
-  .nav::-webkit-scrollbar{display:none}
-  .tab{padding:13px 18px;border:none;background:none;font-size:12.5px;font-family:'Noto Sans TC',sans-serif;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
-  .tab:hover{color:var(--text)}
-  .tab.on{color:var(--text);border-bottom-color:var(--accent);font-weight:500}
-  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 60px}
-  .sec{display:none}.sec.on{display:block}
-  .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-  .sec-title{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600}
-  .cnt{font-size:11px;color:var(--muted);background:var(--bg);padding:2px 9px;border-radius:10px;border:1px solid var(--border)}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  thead tr{background:var(--bg)}
-  thead th{padding:10px 14px;text-align:left;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap}
-  tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
-  tbody tr:last-child{border-bottom:none}
-  tbody tr:hover{background:#f5f0eb}
-  td{padding:11px 14px;vertical-align:middle}
-  .tag{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:3px;font-weight:500;white-space:nowrap}
-  .name{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:600;line-height:1.4}
-  .loc,.date-cell,.price{color:var(--muted);font-size:12px;white-space:nowrap}
-  .free{color:#059669;font-weight:500}
-  .footer{text-align:center;padding:32px 20px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--border)}
-  @media(max-width:640px){.loc,.date-cell{display:none}td{padding:10px}th:nth-child(3),th:nth-child(4){display:none}}
+  :root { --bg:#faf8f5; --card:#fff; --text:#1a1410; --muted:#6b5c4e; --border:#e8e0d5; --accent:#c0392b; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Noto Sans TC',sans-serif; background:var(--bg); color:var(--text); }
+  .hero { background:linear-gradient(135deg,#1a0a05,#3d1f0f,#1a0a05); color:#fff; padding:48px 24px 36px; text-align:center; }
+  .hero::before { content:'✦  ✦  ✦'; display:block; font-size:10px; letter-spacing:12px; color:rgba(255,255,255,.3); margin-bottom:16px; }
+  .hero h1 { font-family:'Noto Serif TC',serif; font-size:clamp(24px,4vw,42px); font-weight:700; letter-spacing:.06em; margin-bottom:8px; }
+  .hero .sub { font-size:13px; color:rgba(255,255,255,.55); letter-spacing:.18em; }
+  .hero .badge { display:inline-block; margin-top:16px; padding:5px 18px; border:1px solid rgba(255,255,255,.22); border-radius:20px; font-size:12px; color:rgba(255,255,255,.75); letter-spacing:.1em; }
+  .nav { background:var(--card); border-bottom:1px solid var(--border); padding:0 20px; display:flex; overflow-x:auto; scrollbar-width:none; position:sticky; top:0; z-index:100; box-shadow:0 2px 6px rgba(0,0,0,.05); }
+  .nav::-webkit-scrollbar { display:none; }
+  .tab { padding:13px 18px; border:none; background:none; font-size:12.5px; font-family:'Noto Sans TC',sans-serif; color:var(--muted); cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; transition:all .15s; }
+  .tab:hover { color:var(--text); }
+  .tab.on { color:var(--text); border-bottom-color:var(--accent); font-weight:500; }
+  .wrap { max-width:980px; margin:0 auto; padding:32px 20px 60px; }
+  .sec { display:none; }
+  .sec.on { display:block; }
+  .sec-head { display:flex; align-items:center; gap:10px; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .sec-title { font-family:'Noto Serif TC',serif; font-size:20px; font-weight:600; }
+  .cnt { font-size:11px; color:var(--muted); background:var(--bg); padding:2px 9px; border-radius:10px; border:1px solid var(--border); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead tr { background:var(--bg); }
+  thead th { padding:10px 14px; text-align:left; font-weight:500; font-size:11.5px; color:var(--muted); letter-spacing:.05em; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background .12s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:#f5f0eb; }
+  td { padding:11px 14px; vertical-align:middle; }
+  .tag { display:inline-block; font-size:10.5px; padding:2px 8px; border-radius:3px; font-weight:500; white-space:nowrap; }
+  .name { font-family:'Noto Serif TC',serif; font-size:14px; font-weight:600; line-height:1.4; }
+  .loc, .date-cell, .price { color:var(--muted); font-size:12px; white-space:nowrap; }
+  .free { color:#059669; font-weight:500; }
+  .footer { text-align:center; padding:32px 20px; font-size:11.5px; color:var(--muted); border-top:1px solid var(--border); }
+  @media(max-width:640px){ .loc,.date-cell{display:none} td{padding:10px} th:nth-child(3),th:nth-child(4){display:none} }
 </style>
 </head>
 <body>
+
 <div class="hero">
   <h1>台北・新北 藝文活動</h1>
   <p class="sub">TAIPEI &amp; NEW TAIPEI ARTS EVENTS</p>
-  <div class="badge">2026/03/20 – 2026/04/03</div>
-  <span class="updated">自動更新於 2026/03/20 15:23 · 費用超過 NT$1000 不列入</span>
+  <div class="badge">2026 / 03 / 20 &nbsp;–&nbsp; 04 / 03</div>
 </div>
-<nav class="nav" id="nav"></nav>
-<div class="wrap" id="wrap"></div>
+
+<nav class="nav">
+  <button class="tab on" onclick="show('all',this)">全部 (22)</button>
+  <button class="tab" onclick="show('flower',this)">🌸 賞花 (5)</button>
+  <button class="tab" onclick="show('exhibition',this)">🖼️ 展覽 (6)</button>
+  <button class="tab" onclick="show('workshop',this)">🎨 🎨 工作坊 (5)</button>
+  <button class="tab" onclick="show('performance',this)">🎭 🎭 表演 (4)</button>
+  <button class="tab" onclick="show('market',this)">🛍️ 市集 (2)</button>
+  <button class="tab" onclick="show('music',this)">🎵 🎵 🎵 音樂演出 (3)</button>
+</nav>
+
+<div class="wrap">
+
+<div class="sec on" id="s-all">
+  <div class="sec-head"><h2 class="sec-title">✨ 全部活動</h2><span class="cnt">26 項</span></div>
+  <table><thead><tr><th>類別</th><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead>
+  <tbody id="all-body"></tbody></table>
+</div>
+
+<!-- 賞花 -->
+<div class="sec" id="s-flower">
+  <div class="sec-head"><h2 class="sec-title">🌸 賞花</h2><span class="cnt">1 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">2026 竹子湖海芋季「花田樂章」</td><td class="date-cell">03/06 – 04/06</td><td class="loc">台北・陽明山竹子湖</td><td class="price free">免費入園</td></tr>
+    <tr><td class="name">2026 臺北玫瑰展</td><td class="date-cell">03/06 – 04/06</td><td class="loc">台北・臺北玫瑰園（大安區）</td><td class="price free">免費</td></tr>
+    <tr><td class="name">台北杜鵑花季・拾花廣場 Daan PLAZA</td><td class="date-cell">3/7、3/14、3/21（六）</td><td class="loc">台北・大安森林公園周邊</td><td class="price free">免費</td></tr>
+    <tr><td class="name">淡水紫藤花園限定開放</td><td class="date-cell">03/20 – 04/10</td><td class="loc">新北・淡水區忠寮里</td><td class="price">依場地公告</td></tr>
+    <tr><td class="name">花藝綠境攝影比賽（花 IN 台北）</td><td class="date-cell">02/05 – 04/08</td><td class="loc">台北・各花季景點</td><td class="price free">免費參加</td></tr>
+  </tbody></table>
+</div>
+
+<!-- 展覽 -->
+<div class="sec" id="s-exhibition">
+  <div class="sec-head"><h2 class="sec-title">🖼️ 展覽</h2><span class="cnt">6 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">蜷川實花展 with EiM：彼岸之光，此岸之影</td><td class="date-cell">01/17 – 04/19</td><td class="loc">台北・華山1914文創園區</td><td class="price">NT$490</td></tr>
+    <tr><td class="name">步入永恆：賈科梅蒂、米羅、考爾德</td><td class="date-cell">12/24 – 04/20</td><td class="loc">台北・富邦美術館（信義區）</td><td class="price">NT$500</td></tr>
+    <tr><td class="name">釀時光，刻台灣－成若涵紙雕個展</td><td class="date-cell">01/06 – 04/06</td><td class="loc">台北・華山1914文創園區</td><td class="price free">免費</td></tr>
+    <tr><td class="name">遠眺的共夢者－朱書麒個展</td><td class="date-cell">03/14 – 04/26</td><td class="loc">台北・若木藝廊</td><td class="price free">免費</td></tr>
+    <tr><td class="name">第14屆台北雙年展「地平線上的低吟」</td><td class="date-cell">展期進行中</td><td class="loc">台北・台北市立美術館（中山區）</td><td class="price free">免費</td></tr>
+    <tr><td class="name">台灣萬代南夢宮一番賞 Festival 玩樂祭</td><td class="date-cell">03/19 – 03/22</td><td class="loc">台北・華山1914文創園區</td><td class="price free">免費入場</td></tr>
+  </tbody></table>
+</div>
+
+<!-- 工作坊 -->
+<div class="sec" id="s-workshop">
+  <div class="sec-head"><h2 class="sec-title">🎨 教學工作坊</h2><span class="cnt">5 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">臺北玫瑰展・插花示範工作坊</td><td class="date-cell">週末場次（3–4月）</td><td class="loc">台北・臺北玫瑰園</td><td class="price free">免費（現場報名）</td></tr>
+    <tr><td class="name">春清風似友・書籍裝幀手工書工作坊</td><td class="date-cell">03/27 – 03/29</td><td class="loc">台北・華山1914文創園區</td><td class="price free">免費入場</td></tr>
+    <tr><td class="name">竹子湖海芋季・農園採花體驗</td><td class="date-cell">03/06 – 04/06 每日</td><td class="loc">台北・陽明山竹子湖各農園</td><td class="price">約 NT$100–200/把</td></tr>
+    <tr><td class="name">木可工作室・油畫單堂體驗課</td><td class="date-cell">平日 14:00–21:30／週末 10:30–18:30</td><td class="loc">新北・三重區光明路</td><td class="price">約 NT$600–900</td></tr>
+    <tr><td class="name">997 STUDIO・Tufting 地毯手作體驗</td><td class="date-cell">常態開放，可單堂預約</td><td class="loc">台北・信義區仁愛路四段</td><td class="price">依課程定價</td></tr>
+  </tbody></table>
+</div>
+
+<!-- 表演 -->
+<div class="sec" id="s-performance">
+  <div class="sec-head"><h2 class="sec-title">🎭 表演藝術</h2><span class="cnt">4 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">暗戀桃花源（傳承版）</td><td class="date-cell">03/27 – 03/28</td><td class="loc">台北・士林區臺北表演藝術中心</td><td class="price">NT$300–800</td></tr>
+    <tr><td class="name">暗戀桃花源（三十周年版）</td><td class="date-cell">04/02 – 04/03</td><td class="loc">台北・士林區臺北表演藝術中心</td><td class="price">NT$300–800</td></tr>
+    <tr><td class="name">TWICE 官方快閃店《THIS IS FOR》官方周邊店</td><td class="date-cell">03/14 – 03/23</td><td class="loc">台北・華山1914文創園區</td><td class="price free">免費入場</td></tr>
+  </tbody></table>
+</div>
+
+<!-- 市集 -->
+<div class="sec" id="s-market">
+  <div class="sec-head"><h2 class="sec-title">🛍️ 藝文市集</h2><span class="cnt">2 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">台北杜鵑花季・拾花廣場市集</td><td class="date-cell">3/7、3/14、3/21（六）</td><td class="loc">台北・大安區 Daan PLAZA</td><td class="price free">免費</td></tr>
+    <tr><td class="name">春清風似友・絕版書市暨論壇</td><td class="date-cell">03/27 – 03/29</td><td class="loc">台北・華山1914文創園區</td><td class="price free">免費入場</td></tr>
+  </tbody></table>
+</div>
+
+<!-- 音樂 -->
+<div class="sec" id="s-music">
+  <div class="sec-head"><h2 class="sec-title">🎵 音樂演出</h2><span class="cnt">3 項</span></div>
+  <table><thead><tr><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>
+    <tr><td class="name">NSO × 舞蹈空間：彼得與狼（音樂舞蹈）</td><td class="date-cell">03/20 – 03/21</td><td class="loc">台北・士林區臺北表演藝術中心</td><td class="price">NT$300–600</td></tr>
+  </tbody></table>
+</div>
+
+</div>
+
 <div class="footer">
-  <p>資料由 Gemini AI 搜尋整理 · 活動資訊僅供參考，請以主辦單位公告為準</p>
+  <p>資料由搜尋整理・生成時間：2026/03/20 &nbsp;|&nbsp; 活動資訊僅供參考，請以主辦單位公告為準</p>
 </div>
+
 <script>
-const DATA = {"categories": [{"key": "flower", "events": []}, {"key": "exhibition", "events": []}, {"key": "workshop", "events": []}, {"key": "performance", "events": []}, {"key": "market", "events": []}, {"key": "music", "events": []}]};
 const TAGS = {
-  flower:     {label:'🌸 賞花',   style:'background:#fce4ec;color:#c2185b;border:1px solid #f48fb160'},
-  exhibition: {label:'🖼️ 展覽',  style:'background:#ede7f6;color:#6a1b9a;border:1px solid #ce93d860'},
-  workshop:   {label:'🎨 工作坊', style:'background:#e0f7fa;color:#00838f;border:1px solid #80deea60'},
-  performance:{label:'🎭 表演',   style:'background:#fff8e1;color:#e65100;border:1px solid #ffcc0260'},
-  market:     {label:'🛍️ 市集',  style:'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a760'},
-  music:      {label:'🎵 音樂',   style:'background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a60'},
+  flower:     { label:'🌸 賞花',   style:'background:#fce4ec;color:#c2185b;border:1px solid #f48fb160' },
+  exhibition: { label:'🖼️ 展覽',  style:'background:#ede7f6;color:#6a1b9a;border:1px solid #ce93d860' },
+  workshop:   { label:'🎨 工作坊', style:'background:#e0f7fa;color:#00838f;border:1px solid #80deea60' },
+  performance:{ label:'🎭 表演',   style:'background:#fff8e1;color:#e65100;border:1px solid #ffcc0260' },
+  market:     { label:'🛍️ 市集',  style:'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a760' },
+  music:      { label:'🎵 音樂',   style:'background:#ffebee;color:#b71c1c;border:1px solid #ef9a9a60' },
 };
-function row(cat, e, showTag) {
-  const tag = showTag ? `<td><span class="tag" style="${TAGS[cat].style}">${TAGS[cat].label}</span></td>` : '';
-  const fc = e.price && (e.price.includes('免費') || e.price === '0') ? 'free' : '';
-  return `<tr>${tag}<td class="name">${e.name}</td><td class="date-cell">${e.date}</td><td class="loc">${e.location}</td><td class="price ${fc}">${e.price}</td></tr>`;
-}
-function buildSection(id, title, cat, events, showTag) {
-  const rows = events.map(e => row(cat, e, showTag)).join('');
-  return `<div class="sec" id="s-${id}"><div class="sec-head"><h2 class="sec-title">${title}</h2><span class="cnt">${events.length} 項</span></div><table><thead><tr>${showTag?'<th>類別</th>':''}<th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-const nav = document.getElementById('nav');
-const wrap = document.getElementById('wrap');
-const allEvents = [];
-DATA.categories.forEach(cat => { allEvents.push(...cat.events.map(e => ({...e, _cat: cat.key}))); });
-nav.innerHTML = `<button class="tab on" onclick="show('all',this)">全部 (${allEvents.length})</button>`;
-wrap.innerHTML = buildSection('all', '✨ 全部活動', null, allEvents, true);
-document.querySelector('#s-all table thead tr').innerHTML = '<th>類別</th><th>活動名稱</th><th>日期</th><th>地點</th><th>費用</th>';
-document.querySelectorAll('#s-all tbody tr').forEach((tr, i) => {
-  const cat = allEvents[i]._cat;
-  tr.querySelector('td').innerHTML = `<span class="tag" style="${TAGS[cat].style}">${TAGS[cat].label}</span>`;
+const body = document.getElementById('all-body');
+['flower','exhibition','workshop','performance','market','music'].forEach(cat => {
+  document.getElementById('s-'+cat).querySelectorAll('tbody tr').forEach(row => {
+    const tr = document.createElement('tr');
+    const cells = row.querySelectorAll('td');
+    tr.innerHTML = `<td><span class="tag" style="${TAGS[cat].style}">${TAGS[cat].label}</span></td>`
+      + Array.from(cells).map(c=>`<td class="${c.className}">${c.innerHTML}</td>`).join('');
+    body.appendChild(tr);
+  });
 });
-DATA.categories.forEach(cat => {
-  if (!cat.events.length) return;
-  const label = TAGS[cat.key].label;
-  nav.innerHTML += `<button class="tab" onclick="show('${cat.key}',this)">${label} (${cat.events.length})</button>`;
-  wrap.innerHTML += buildSection(cat.key, label, cat.key, cat.events, false);
-});
-document.querySelector('#s-all').classList.add('on');
 function show(key, btn) {
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
